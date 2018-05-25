@@ -12,23 +12,28 @@ import java.util.regex.Pattern;
 
 public class EchoBot extends TelegramLongPollingBot {
 
+    ApiBuilder apiBuilder = new ApiBuilder();
+
     public void onUpdateReceived(Update update) {
+
 
         if (update.hasMessage() &&
                 update.getMessage().hasText()) {
 
             String response = getResponse(update.getMessage().getText());
 
-            try {
+            /*try {
                 System.out.println(readJsonFromUrl("https://webproxy.fh-kufstein.ac.at/cafeteria/getcafeteriadata;from=21.04.2018;"));
             } catch (IOException e) {
                 e.printStackTrace();
-            }
+            }*/
+
+            System.out.println(apiBuilder.week());
 
             if (!response.isEmpty()) {
                 SendMessage message = new SendMessage()
                         .setChatId(update.getMessage().getChatId())
-                        .setText(update.getMessage().getText().substring(6));
+                        .setText(response);
 
                 try {
                     execute(message);
