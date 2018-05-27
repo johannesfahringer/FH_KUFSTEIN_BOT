@@ -28,7 +28,7 @@ public class EchoBot extends TelegramLongPollingBot {
                 e.printStackTrace();
             }*/
 
-            System.out.println(apiBuilder.period("Dienstag", "Donnerstag"));
+            System.out.println(apiBuilder.period("Dienstag", "Donnerstag")); // zum Testen (Dario)
 
             if (!response.isEmpty()) {
                 SendMessage message = new SendMessage()
