@@ -25,7 +25,7 @@ public class EchoBot extends TelegramLongPollingBot {
                 update.getMessage().hasText()) {
             System.out.println(apiBuilder.period("Dienstag", "Samstag")); // zum Testen (Dario)
 
-            jsonString = apiBuilder.period("Dienstag", "Samstag");
+            jsonString = apiBuilder.period("Dienstag", "Sonntag");
             System.out.println(showJsonData(jsonString));
 
             String response = showJsonData(jsonString);
@@ -116,11 +116,16 @@ public class EchoBot extends TelegramLongPollingBot {
             {
                 JSONObject object = cafeteria.getJSONObject(n);
                 //System.out.println(cafeteriaObject);
-                symbol = object.getString("symbol");
-                preis = object.getString("preis");
-                name = object.getString("name");
-                datum = object.getString("tag");
-                result = result.concat(datum + " : "  + name.replace(System.lineSeparator(), " ") + "  " +preis  + System.lineSeparator() );
+                if (object.getString("name").startsWith("Feiertag")||object.getString("name").startsWith("DINER GESCHLOSSEN")){
+                    datum = object.getString("tag");
+                    result = result.concat("Am " + datum + " hat die Cafeteria geschlossen " + System.lineSeparator());
+                }else {
+                    symbol = object.getString("symbol");
+                    preis = object.getString("preis");
+                    name = object.getString("name");
+                    datum = object.getString("tag");
+                    result = result.concat("Am "  + datum + " gibt es " + name.replace(System.lineSeparator(), " ") + " für  " + preis + System.lineSeparator());
+                }
                /* System.out.println(object);
                 System.out.println(result);*/
             }
