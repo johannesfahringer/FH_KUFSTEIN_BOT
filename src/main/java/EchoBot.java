@@ -1,3 +1,4 @@
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.telegram.telegrambots.api.methods.send.SendMessage;
@@ -13,14 +14,21 @@ import java.util.regex.Pattern;
 public class EchoBot extends TelegramLongPollingBot {
 
     ApiBuilder apiBuilder = new ApiBuilder();
+    JSONObject cafeteriaObject = null;
+    String jsonString = "";
+
 
     public void onUpdateReceived(Update update) {
 
 
         if (update.hasMessage() &&
                 update.getMessage().hasText()) {
+            System.out.println(apiBuilder.period("Dienstag", "Samstag")); // zum Testen (Dario)
 
-            String response = getResponse(update.getMessage().getText());
+            jsonString = apiBuilder.period("Dienstag", "Samstag");
+            System.out.println(showJsonData(jsonString));
+
+            String response = showJsonData(jsonString);
 
             /*try {
                 System.out.println(readJsonFromUrl("https://webproxy.fh-kufstein.ac.at/cafeteria/getcafeteriadata;from=21.04.2018;"));
@@ -28,7 +36,10 @@ public class EchoBot extends TelegramLongPollingBot {
                 e.printStackTrace();
             }*/
 
-            System.out.println(apiBuilder.period("Dienstag", "Donnerstag")); // zum Testen (Dario)
+
+
+
+
 
             if (!response.isEmpty()) {
                 SendMessage message = new SendMessage()
@@ -38,6 +49,7 @@ public class EchoBot extends TelegramLongPollingBot {
                 try {
                     execute(message);
                 } catch (TelegramApiException e) {
+                    System.out.println("FUNKTIONIERT NICHT");
                     System.err.println(e.getMessage());
                 }
             }
@@ -84,6 +96,42 @@ public class EchoBot extends TelegramLongPollingBot {
         } finally {
             is.close();
         }
+    }
+
+    public String showJsonData(String URL){
+        String result = "";
+        String symbol = "";
+        String name = "";
+        String preis = "";
+        String datum = "";
+        try {
+            cafeteriaObject = (readJsonFromUrl(jsonString));
+            // System.out.println(cafeteriaObject);
+            JSONArray cafeteria = cafeteriaObject.getJSONArray("cafeteriaData");
+            //System.out.println(cafeteria);
+
+            //JSONObject cafeteriaObject = cafeteria.getJSONObject(0);
+
+            for(int n = 0; n < cafeteria.length(); n++)
+            {
+                JSONObject object = cafeteria.getJSONObject(n);
+                //System.out.println(cafeteriaObject);
+                symbol = object.getString("symbol");
+                preis = object.getString("preis");
+                name = object.getString("name");
+                datum = object.getString("tag");
+                result = result.concat(datum + " : "  + name.replace(System.lineSeparator(), " ") + "  " +preis  + System.lineSeparator() );
+               /* System.out.println(object);
+                System.out.println(result);*/
+            }
+
+
+
+            //System.out.println(symbol + " " + preis + " " + name);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+     return result;
     }
 
 
