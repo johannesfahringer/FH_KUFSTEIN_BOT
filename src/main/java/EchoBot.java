@@ -16,6 +16,7 @@ public class EchoBot extends TelegramLongPollingBot {
     ApiBuilder apiBuilder = new ApiBuilder();
     JSONObject cafeteriaObject = null;
     String jsonString = "";
+    boolean isTomorrow = false;
 
 
     public void onUpdateReceived(Update update) {
@@ -26,8 +27,10 @@ public class EchoBot extends TelegramLongPollingBot {
 
             //######################################################
             //So könnte ein funktionierendes Beispiel mit Heute und Morgen aussehen (noch nicht getestet)
-            String url = getResponse(update.getMessage().getText());
-            String response = showJsonData(url);
+            jsonString = getResponse(update.getMessage().getText());
+            System.out.println(jsonString);
+            System.out.println();
+            String response = showJsonData(jsonString);
 
             //######################################################
             // Problem mit showJsonData Funktion - Arbeitet nicht mit URL sondern mit jsonString Variable.
@@ -57,11 +60,13 @@ public class EchoBot extends TelegramLongPollingBot {
     public String getResponse(String message) {
         if (message.contains("heute")) {
             String response = apiBuilder.today();
+            isTomorrow = false;
             return response;
         } else if (message.contains("morgen")) {
             String response = apiBuilder.tomorrow();
+            isTomorrow = true;
             return response;
-        }else if (message.contains ("woche")) {
+        } else if (message.contains ("woche")) {
             String response = apiBuilder.week();
             return response;
         }else if (message.matches("/^(?:sun(?:day)?|mon(?:day)?|tue(?:sday)?|wed(?:nesday)?|thu(?:rsday)?|fri(?:day)?|sat(?:urday)?)$/i")) {
@@ -72,6 +77,8 @@ public class EchoBot extends TelegramLongPollingBot {
         }
         return "";
     }
+
+
 
     private static String readAll(Reader rd) throws IOException {
         StringBuilder sb = new StringBuilder();
@@ -115,28 +122,54 @@ public class EchoBot extends TelegramLongPollingBot {
         String preis = "";
         String datum = "";
         try {
+            System.out.println("HALLO ANFANG SHOW JSON:  " + jsonString);
             cafeteriaObject = (readJsonFromUrl(jsonString));
-            // System.out.println(cafeteriaObject);
+            System.out.println(cafeteriaObject);
             JSONArray cafeteria = cafeteriaObject.getJSONArray("cafeteriaData");
-            //System.out.println(cafeteria);
-
+            System.out.println(cafeteria);
+            System.out.println("LÄNGE CAFETERIA" + cafeteria.length());
             //JSONObject cafeteriaObject = cafeteria.getJSONObject(0);
+            if (cafeteria.length()==0) {
+                result =  "Keine Daten vorhanden";
+                return result;
+            }
+            if (isTomorrow) {
+                for (int n = 0; n < cafeteria.length(); n++) {
+                    JSONObject cafeteriaData = cafeteria.getJSONObject(n);
+                    System.out.println("ZEIGE DICH" + cafeteriaObject);
+                    if (cafeteriaData.getString("name").startsWith("Feiertag") || cafeteriaData.getString("name").isEmpty() || cafeteriaData.getString("name").startsWith("DINER GESCHLOSSEN")) {
+                        datum = cafeteriaData.getString("tag");
+                        result = result.concat("Am " + datum + " hat die Cafeteria geschlossen " + System.lineSeparator());
+                    } else {
+                        symbol = cafeteriaData.getString("symbol");
+                        preis = cafeteriaData.getString("preis");
+                        name = cafeteriaData.getString("name");
+                        datum = cafeteriaData.getString("tag");
+                        result = result.concat("Morgen gibt es " + name.replace(System.lineSeparator(), " ") + " für  " + preis + System.lineSeparator());
 
-            for (int n = 0; n < cafeteria.length(); n++) {
-                JSONObject object = cafeteria.getJSONObject(n);
-                //System.out.println(cafeteriaObject);
-                if (object.getString("name").startsWith("Feiertag") || object.getString("name").startsWith("DINER GESCHLOSSEN")) {
-                    datum = object.getString("tag");
-                    result = result.concat("Am " + datum + " hat die Cafeteria geschlossen " + System.lineSeparator());
-                } else {
-                    symbol = object.getString("symbol");
-                    preis = object.getString("preis");
-                    name = object.getString("name");
-                    datum = object.getString("tag");
-                    result = result.concat("Am " + datum + " gibt es " + name.replace(System.lineSeparator(), " ") + " für  " + preis + System.lineSeparator());
+                    }
                 }
-               /* System.out.println(object);
-                System.out.println(result);*/
+                isTomorrow=false;
+                return result;
+            } else {
+                for (int n = 0; n < cafeteria.length(); n++) {
+                    System.out.println(n);
+                    JSONObject object = cafeteria.getJSONObject(n);
+                    System.out.println(cafeteriaObject);
+                    if (object.getString("name").startsWith("Feiertag") || object.getString("name").startsWith("DINER GESCHLOSSEN")) {
+                        datum = object.getString("tag");
+                        result = result.concat("Am " + datum + " hat die Cafeteria geschlossen " + System.lineSeparator());
+                    } else {
+                        symbol = object.getString("symbol");
+                        preis = object.getString("preis");
+                        name = object.getString("name");
+                        datum = object.getString("tag");
+                        result = result.concat("Am " + datum + " gibt es " + name.replace(System.lineSeparator(), " ") + " für  " + preis + System.lineSeparator());
+                    }
+                    System.out.println(object);
+                    System.out.println(result);
+
+                }
             }
 
 
@@ -149,10 +182,10 @@ public class EchoBot extends TelegramLongPollingBot {
 
 
     public String getBotUsername() {
-        return "Cafeteria_FH_bot";
+        return "jfahringer_bot";
     }
 
     public String getBotToken() {
-        return "561379899:AAE1ihEja2UH42vGxVmH4jk1xyYT_iu1BFE";
+        return "576369085:AAHDn2kQ2h9Rv_ozm7H2uwYqXjEBLLFwai8";
     }
 }
