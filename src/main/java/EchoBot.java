@@ -61,6 +61,14 @@ public class EchoBot extends TelegramLongPollingBot {
         } else if (message.contains("morgen")) {
             String response = apiBuilder.tomorrow();
             return response;
+        }else if (message.contains ("woche")) {
+            String response = apiBuilder.week();
+            return response;
+        }else if (message.matches("/^(?:sun(?:day)?|mon(?:day)?|tue(?:sday)?|wed(?:nesday)?|thu(?:rsday)?|fri(?:day)?|sat(?:urday)?)$/i")) {
+            String response = apiBuilder.day(message);
+            System.out.println("Message: " + message);
+            System.out.println("response: " + response);
+            return response;
         }
         return "";
     }
