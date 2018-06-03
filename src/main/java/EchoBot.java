@@ -23,22 +23,20 @@ public class EchoBot extends TelegramLongPollingBot {
 
         if (update.hasMessage() &&
                 update.getMessage().hasText()) {
-            System.out.println(apiBuilder.period("Dienstag", "Samstag")); // zum Testen (Dario)
 
-            jsonString = apiBuilder.period("Dienstag", "Sonntag");
-            System.out.println(showJsonData(jsonString));
+            //######################################################
+            //So könnte ein funktionierendes Beispiel mit Heute und Morgen aussehen (noch nicht getestet)
+            String url = getResponse(update.getMessage().getText());
+            String response = showJsonData(url);
 
-            String response = showJsonData(jsonString);
+            //######################################################
+            // Problem mit showJsonData Funktion - Arbeitet nicht mit URL sondern mit jsonString Variable.
 
             /*try {
                 System.out.println(readJsonFromUrl("https://webproxy.fh-kufstein.ac.at/cafeteria/getcafeteriadata;from=21.04.2018;"));
             } catch (IOException e) {
                 e.printStackTrace();
             }*/
-
-
-
-
 
 
             if (!response.isEmpty()) {
@@ -57,8 +55,12 @@ public class EchoBot extends TelegramLongPollingBot {
     }
 
     public String getResponse(String message) {
-        if (message.matches("(?i)echo: .*")) {
-            return message.substring(6);
+        if (message.contains("heute")) {
+            String response = apiBuilder.today();
+            return response;
+        } else if (message.contains("morgen")) {
+            String response = apiBuilder.tomorrow();
+            return response;
         }
         return "";
     }
@@ -98,7 +100,7 @@ public class EchoBot extends TelegramLongPollingBot {
         }
     }
 
-    public String showJsonData(String URL){
+    public String showJsonData(String URL) {
         String result = "";
         String symbol = "";
         String name = "";
@@ -112,33 +114,30 @@ public class EchoBot extends TelegramLongPollingBot {
 
             //JSONObject cafeteriaObject = cafeteria.getJSONObject(0);
 
-            for(int n = 0; n < cafeteria.length(); n++)
-            {
+            for (int n = 0; n < cafeteria.length(); n++) {
                 JSONObject object = cafeteria.getJSONObject(n);
                 //System.out.println(cafeteriaObject);
-                if (object.getString("name").startsWith("Feiertag")||object.getString("name").startsWith("DINER GESCHLOSSEN")){
+                if (object.getString("name").startsWith("Feiertag") || object.getString("name").startsWith("DINER GESCHLOSSEN")) {
                     datum = object.getString("tag");
                     result = result.concat("Am " + datum + " hat die Cafeteria geschlossen " + System.lineSeparator());
-                }else {
+                } else {
                     symbol = object.getString("symbol");
                     preis = object.getString("preis");
                     name = object.getString("name");
                     datum = object.getString("tag");
-                    result = result.concat("Am "  + datum + " gibt es " + name.replace(System.lineSeparator(), " ") + " für  " + preis + System.lineSeparator());
+                    result = result.concat("Am " + datum + " gibt es " + name.replace(System.lineSeparator(), " ") + " für  " + preis + System.lineSeparator());
                 }
                /* System.out.println(object);
                 System.out.println(result);*/
             }
 
 
-
             //System.out.println(symbol + " " + preis + " " + name);
         } catch (IOException e) {
             e.printStackTrace();
         }
-     return result;
+        return result;
     }
-
 
 
     public String getBotUsername() {

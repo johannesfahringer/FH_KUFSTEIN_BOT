@@ -24,6 +24,16 @@ public class ApiBuilder {
     DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
     DateFormat dateFormatString = new SimpleDateFormat("EEEE");
 
+    public String today() {
+        Date date = new Date();
+        Calendar c = Calendar.getInstance();
+        c.setTime(date);
+
+        String param = dateFormat.format(c.getTime());
+
+        return String.format("%sfrom=%s", restApi, param);
+    }
+
     public String tomorrow() {
         Date date = new Date();
         Calendar c = Calendar.getInstance();
