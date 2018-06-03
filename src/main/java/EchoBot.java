@@ -69,11 +69,6 @@ public class EchoBot extends TelegramLongPollingBot {
             System.out.println("Message: " + message);
             System.out.println("response: " + response);
             return response;
-        }else if (message.matches()) {
-            String von;
-            String bis;
-            String response = apiBuilder.period()
-            return response;
         }
         return "";
     }
