@@ -9,6 +9,7 @@ import org.telegram.telegrambots.exceptions.TelegramApiException;
 import java.io.*;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class EchoBot extends TelegramLongPollingBot {
@@ -74,8 +75,17 @@ public class EchoBot extends TelegramLongPollingBot {
             System.out.println("Message: " + message);
             System.out.println("response: " + response);
             return response;
+        }else if (message.matches("(?<=von )(\\w+? )|(?<=bis )(\\w+? )")){
+            Pattern von = Pattern.compile("(?<=von )(\\w+? )");
+            Matcher mVon = von.matcher(message);
+            Pattern bis = Pattern.compile("(?<=bis )(\\w+? )");
+            Matcher mBis = bis.matcher(message);
+            String param1 = mVon.group(1);
+            String param2 = mBis.group(1);
+            String response = apiBuilder.period(param1, param2);
+            return response;
         }
-        return "";
+        return "ungültige Eingabe";
     }
 
 
