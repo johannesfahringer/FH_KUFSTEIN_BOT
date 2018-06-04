@@ -70,9 +70,13 @@ public class EchoBot extends TelegramLongPollingBot {
             String response = apiBuilder.week();
             return response;
         }else if (message.matches("/^(?:sun(?:day)?|mon(?:day)?|tue(?:sday)?|wed(?:nesday)?|thu(?:rsday)?|fri(?:day)?|sat(?:urday)?)$/i")) {
-            String response = apiBuilder.day(message);
-            System.out.println("Message: " + message);
+            System.out.println("message");
+            String response = apiBuilder.day("monday");
             System.out.println("response: " + response);
+            return response;
+        }else if (message.contains("von")){
+            String response =apiBuilder.period("montag", "mittwoch");
+            System.out.println("response: " +response);
             return response;
         }
         return "";
@@ -182,10 +186,10 @@ public class EchoBot extends TelegramLongPollingBot {
 
 
     public String getBotUsername() {
-        return "Cafeteria_FH_bot";
+        return "FloCsaBot";//"Cafeteria_FH_bot";
     }
 
     public String getBotToken() {
-        return "561379899:AAE1ihEja2UH42vGxVmH4jk1xyYT_iu1BFE";
+        return "568821728:AAHHxh6iWbm6W7L2Tdjd4hwGhK5-ycdJKSY"; //"561379899:AAE1ihEja2UH42vGxVmH4jk1xyYT_iu1BFE";
     }
 }
