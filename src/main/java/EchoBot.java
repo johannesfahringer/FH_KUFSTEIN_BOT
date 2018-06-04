@@ -84,7 +84,7 @@ public class EchoBot extends TelegramLongPollingBot {
             System.out.println("Message: " + message);
             System.out.println("response: " + response);
             return response;
-        }else if (message.matches("(.) bis (.)")){
+        }else if (message.matches("(.*) bis (.*)")){
             Pattern von = Pattern.compile("(?<=von )(\\w+? )");
             Matcher mVon = von.matcher(message);
             Pattern bis = Pattern.compile("(?<=bis )(\\w+? )");
@@ -205,10 +205,10 @@ public class EchoBot extends TelegramLongPollingBot {
 
 
     public String getBotUsername() {
-        return "Cafeteria_FH_bot";
+        return "FloCsabot";//"Cafeteria_FH_bot";
     }
 
     public String getBotToken() {
-        return "561379899:AAE1ihEja2UH42vGxVmH4jk1xyYT_iu1BFE";
+        return "568821728:AAHHxh6iWbm6W7L2Tdjd4hwGhK5-ycdJKSY"; //"561379899:AAE1ihEja2UH42vGxVmH4jk1xyYT_iu1BFE";
     }
 }
