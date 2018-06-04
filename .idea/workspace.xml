@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="3e31ad03-0355-4dfd-ad73-386ce6897685" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/src/main/java/EchoBot.java" afterPath="$PROJECT_DIR$/src/main/java/EchoBot.java" />
-    </list>
+    <list default="true" id="3e31ad03-0355-4dfd-ad73-386ce6897685" name="Default" comment="" />
     <ignored path="$PROJECT_DIR$/target/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -17,8 +15,8 @@
       <file leaf-file-name="EchoBot.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/EchoBot.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="260">
-              <caret line="193" column="0" lean-forward="true" selection-start-line="193" selection-start-column="0" selection-end-line="193" selection-end-column="0" />
+            <state relative-caret-position="530">
+              <caret line="211" column="63" lean-forward="true" selection-start-line="211" selection-start-column="63" selection-end-line="211" selection-end-column="63" />
               <folding>
                 <element signature="e#8520#8521#0" expanded="true" />
                 <element signature="e#8561#8562#0" expanded="true" />
@@ -267,12 +265,12 @@
       <workItem from="1527427820171" duration="8007000" />
       <workItem from="1527519101196" duration="1107000" />
       <workItem from="1528118560909" duration="3754000" />
-      <workItem from="1528122344834" duration="3106000" />
+      <workItem from="1528122344834" duration="3256000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="50393000" />
+    <option name="totallyTimeSpent" value="50543000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="0" width="1614" height="1047" extended-state="0" />
@@ -759,8 +757,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/EchoBot.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="260">
-          <caret line="193" column="0" lean-forward="true" selection-start-line="193" selection-start-column="0" selection-end-line="193" selection-end-column="0" />
+        <state relative-caret-position="530">
+          <caret line="211" column="63" lean-forward="true" selection-start-line="211" selection-start-column="63" selection-end-line="211" selection-end-column="63" />
           <folding>
             <element signature="e#8520#8521#0" expanded="true" />
             <element signature="e#8561#8562#0" expanded="true" />
