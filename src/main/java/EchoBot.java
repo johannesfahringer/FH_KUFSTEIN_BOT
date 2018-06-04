@@ -16,7 +16,7 @@ public class EchoBot extends TelegramLongPollingBot {
 
     ApiBuilder apiBuilder = new ApiBuilder();
     JSONObject cafeteriaObject = null;
-
+    boolean messageOk = false;
     boolean isTomorrow = false;
 
 
@@ -32,6 +32,18 @@ public class EchoBot extends TelegramLongPollingBot {
             System.out.println(jsonString);
             System.out.println();
             String response = showJsonData(jsonString);
+            String error = "Anleitung: Es scheint als hätten Sie eine ungültige Nachricht eingegeben. " +System.lineSeparator() +
+                    " Deshalb folgen Sie bitte dieser Anleitung: " + System.lineSeparator() +
+                    " Gerichte vom heutigen Tag werden Ihnen durch die Eingabe des Schlüsselworts: heute angezeigt." + System.lineSeparator()
+                    + "EIN BEISPIEL: Was gibt es heute zu essen?" + System.lineSeparator() +
+                    " Gerichte vom morgigen Tag werden Ihnen durch die Eingabe des Schlüsselworts: morgen angezeigt." + System.lineSeparator()
+                    + " EIN BEISPIEL: Was gibt es morgen zu essen?" + System.lineSeparator() +
+                    " Gerichte von der gesamten Woche werden Ihnen durch die Eingabe des Schlüsselworts: woche angezeigt." + System.lineSeparator()
+                    + " EIN BEISPIEL: Was gibt es diese woche zu essen?" + System.lineSeparator() +
+                    " Sie können auch gezielt nach einem Tag fragen. In diesem Fall muss das Schlüsselwort am gefolgt von einem Wochentag eingegeben werden" + System.lineSeparator() +
+                    " EIN BEISPIEL: Was gibt es am Donnerstag zu essen?"+ System.lineSeparator() +
+                    " Um die Gerichte innerhalb einer Zeitspanne zu bekommen müssen sie die Schlüsselwörter von, ein beliebiger Wochentag1, bis, ein beliebiger Wochentag2 eingeben" + System.lineSeparator() +
+                    " EIN BEISPIEL: Was gibt es von Donnerstag bis Freitag zu essen?" + System.lineSeparator();
 
             //######################################################
             // Problem mit showJsonData Funktion - Arbeitet nicht mit URL sondern mit jsonString Variable.
@@ -51,26 +63,46 @@ public class EchoBot extends TelegramLongPollingBot {
                 try {
                     execute(message);
                 } catch (TelegramApiException e) {
+                    SendMessage message1 = new SendMessage()
+                            .setChatId(update.getMessage().getChatId())
+                            .setText(error);
                     System.out.println("FUNKTIONIERT NICHT");
                     System.err.println(e.getMessage());
                 }
             }
+
+            if (messageOk){
+                SendMessage message1 = new SendMessage()
+                        .setChatId(update.getMessage().getChatId())
+                        .setText(error);
+
+            try {
+                execute(message1);
+            } catch (TelegramApiException e) {
+                System.out.println("FUNKTIONIERT NICHT");
+                System.err.println(e.getMessage());
+            }
+        }
         }
     }
 
     public String getResponse(String message) {
         if (message.contains("heute")) {
+            messageOk=false;
             String response = apiBuilder.today();
             isTomorrow = false;
             return response;
         } else if (message.contains("morgen")) {
+            messageOk=false;
             String response = apiBuilder.tomorrow();
             isTomorrow = true;
             return response;
         } else if (message.contains ("woche")) {
+            messageOk=false;
             String response = apiBuilder.week();
             return response;
         }else if (message.matches("(.*) am (Montag|Dienstag|Mittwoch|Donnerstag|Freitag|Samstag|Sonntag)(.*)")) {
+            messageOk=false;
             String result = "";
             System.out.println(message);
             Pattern teil2 = Pattern.compile("(Montag|Dienstag|Mittwoch|Donnerstag|Freitag|Samstag|Sonntag)");
@@ -84,21 +116,39 @@ public class EchoBot extends TelegramLongPollingBot {
             System.out.println("Message: " + message);
             System.out.println("response: " + response);
             return response;
-        }else if (message.matches("(.) bis (.)")){
+        }else if (message.matches("(.*) bis (.*)")) {
             Pattern von = Pattern.compile("(?<=von )(\\w+? )");
             Matcher mVon = von.matcher(message);
             Pattern bis = Pattern.compile("(?<=bis )(\\w+? )");
             Matcher mBis = bis.matcher(message);
-            while(mBis.find()&&mVon.find()) {
-                String param1 = mVon.group(1);
-                String param2 = mBis.group(1);
+            String response = "";
+            if (mBis.find() && mVon.find()) {
+                String param1 = mVon.group(1).replace(" ","");
+                String param2 = mBis.group(1).replace(" ","");
                 System.out.println(param1);
                 System.out.println(param2);
-                String response = apiBuilder.period(param1, param2);
-                return response;
+                response = apiBuilder.period(param1, param2);
             }
+            return response;
+        }else {
+            messageOk=true;
         }
-        return "ungültige Eingabe";
+        /*return "Anleitung: Es scheint als hätten Sie eine ungültige Nachricht eingegeben. " +System.lineSeparator() +
+                " Deshalb folgen Sie bitte dieser Anleitung: " + System.lineSeparator() +
+                " Gerichte vom heutigen Tag werden Ihnen durch die Eingabe des Schlüsselworts: heute angezeigt." + System.lineSeparator()
+                + "EIN BEISPIEL: Was gibt es heute zu essen?" + System.lineSeparator() +
+                " Gerichte vom morgigen Tag werden Ihnen durch die Eingabe des Schlüsselworts: morgen angezeigt." + System.lineSeparator()
+                + " EIN BEISPIEL: Was gibt es morgen zu essen?" + System.lineSeparator() +
+                " Gerichte von der gesamten Woche werden Ihnen durch die Eingabe des Schlüsselworts: woche angezeigt." + System.lineSeparator()
+                + " EIN BEISPIEL: Was gibt es diese woche zu essen?" + System.lineSeparator() +
+                " Sie können auch gezielt nach einem Tag fragen. In diesem Fall muss das Schlüsselwort am gefolgt von einem Wochentag eingegeben werden" + System.lineSeparator() +
+                " EIN BEISPIEL: Was gibt es am Donnerstag zu essen?"+ System.lineSeparator() +
+                " Um die Gerichte innerhalb einer Zeitspanne zu bekommen müssen sie die Schlüsselwörter von, ein beliebiger Wochentag1, bis, ein beliebiger Wochentag2 eingeben" + System.lineSeparator() +
+                " EIN BEISPIEL: Was gibt es von Donnerstag bis Freitag zu essen?" + System.lineSeparator();*/
+
+
+
+        return "";
     }
 
 
@@ -198,6 +248,7 @@ public class EchoBot extends TelegramLongPollingBot {
 
             //System.out.println(symbol + " " + preis + " " + name);
         } catch (IOException e) {
+
             e.printStackTrace();
         }
         return result;

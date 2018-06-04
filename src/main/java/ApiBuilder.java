@@ -86,7 +86,8 @@ public class ApiBuilder {
 
         while (control) {
             c.add(Calendar.DATE, 1);
-            if (param1.equals("") && dateFormatString.format(c.getTime()).equals(from)) {
+            String testDay = dateFormatString.format(c.getTime());
+            if (param1.equals("") && testDay.equals(from)) {
                 param1 = dateFormat.format(c.getTime());
             } else if (!param1.equals("") && dateFormatString.format(c.getTime()).equals(until)) {
                 param2 = dateFormat.format(c.getTime());
