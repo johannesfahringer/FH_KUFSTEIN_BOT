@@ -203,10 +203,10 @@ public class EchoBot extends TelegramLongPollingBot {
 
 
     public String getBotUsername() {
-        return "FH_KU_BOT";
+        return "Cafeteria_FH_bot";
     }
 
     public String getBotToken() {
-        return "618922401:AAG8H5bbfzGG1vzUFDwWu57gWiekZrakVeQ";
+        return "561379899:AAE1ihEja2UH42vGxVmH4jk1xyYT_iu1BFE";
     }
 }
