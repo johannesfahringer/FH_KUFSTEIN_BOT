@@ -9,13 +9,14 @@ import org.telegram.telegrambots.exceptions.TelegramApiException;
 import java.io.*;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class EchoBot extends TelegramLongPollingBot {
 
     ApiBuilder apiBuilder = new ApiBuilder();
     JSONObject cafeteriaObject = null;
-    String jsonString = "";
+
     boolean isTomorrow = false;
 
 
@@ -27,7 +28,7 @@ public class EchoBot extends TelegramLongPollingBot {
 
             //######################################################
             //So könnte ein funktionierendes Beispiel mit Heute und Morgen aussehen (noch nicht getestet)
-            jsonString = getResponse(update.getMessage().getText());
+            String jsonString = getResponse(update.getMessage().getText());
             System.out.println(jsonString);
             System.out.println();
             String response = showJsonData(jsonString);
@@ -69,17 +70,35 @@ public class EchoBot extends TelegramLongPollingBot {
         } else if (message.contains ("woche")) {
             String response = apiBuilder.week();
             return response;
-        }else if (message.matches("/^(?:sun(?:day)?|mon(?:day)?|tue(?:sday)?|wed(?:nesday)?|thu(?:rsday)?|fri(?:day)?|sat(?:urday)?)$/i")) {
-            System.out.println("message");
-            String response = apiBuilder.day("monday");
+
+        }else if (message.matches("(.*) am (Montag|Dienstag|Mittwoch|Donnerstag|Freitag|Samstag|Sonntag)(.*)")) {
+            String result = "";
+            System.out.println(message);
+            Pattern teil2 = Pattern.compile("(Montag|Dienstag|Mittwoch|Donnerstag|Freitag|Samstag|Sonntag)");
+            Matcher m = teil2.matcher(message);
+            while(m.find()){
+                System.out.print("HALLO" + m.group() + "KKKKKKK");
+                result = m.group();
+            }
+
+            String response = apiBuilder.day(result);
+            System.out.println("Message: " + message);
             System.out.println("response: " + response);
             return response;
-        }else if (message.contains("von")){
-            String response =apiBuilder.period("montag", "mittwoch");
-            System.out.println("response: " +response);
+        }else if (message.matches("(?<=von )(\\w+? )|(?<=bis )(\\w+? )")){
+            Pattern von = Pattern.compile("(?<=von )(\\w+? )");
+            Matcher mVon = von.matcher(message);
+            Pattern bis = Pattern.compile("(?<=bis )(\\w+? )");
+            Matcher mBis = bis.matcher(message);
+            String param1 = mVon.group(1);
+            String param2 = mBis.group(1);
+            System.out.println(param1);
+            System.out.println(param2);
+            String response = apiBuilder.period(param1, param2);
+
             return response;
         }
-        return "";
+        return "ungültige Eingabe";
     }
 
 
@@ -119,7 +138,7 @@ public class EchoBot extends TelegramLongPollingBot {
         }
     }
 
-    public String showJsonData(String URL) {
+    public String showJsonData(String jsonString) {
         String result = "";
         String symbol = "";
         String name = "";
