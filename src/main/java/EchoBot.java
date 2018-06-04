@@ -70,7 +70,7 @@ public class EchoBot extends TelegramLongPollingBot {
         } else if (message.contains ("woche")) {
             String response = apiBuilder.week();
             return response;
-        }else if (message.matches("(.*)(Montag|Dienstag|Mittwoch|Donnerstag|Freitag|Samstag|Sonntag)(.*)")) {
+        }else if (message.matches("(.*) am (Montag|Dienstag|Mittwoch|Donnerstag|Freitag|Samstag|Sonntag)(.*)")) {
             String result = "";
             System.out.println(message);
             Pattern teil2 = Pattern.compile("(Montag|Dienstag|Mittwoch|Donnerstag|Freitag|Samstag|Sonntag)");
@@ -203,10 +203,10 @@ public class EchoBot extends TelegramLongPollingBot {
 
 
     public String getBotUsername() {
-        return "Cafeteria_FH_bot";
+        return "FH_KU_BOT";
     }
 
     public String getBotToken() {
-        return "561379899:AAE1ihEja2UH42vGxVmH4jk1xyYT_iu1BFE";
+        return "618922401:AAG8H5bbfzGG1vzUFDwWu57gWiekZrakVeQ";
     }
 }
