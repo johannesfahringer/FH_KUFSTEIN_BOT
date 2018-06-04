@@ -16,7 +16,7 @@ public class EchoBot extends TelegramLongPollingBot {
 
     ApiBuilder apiBuilder = new ApiBuilder();
     JSONObject cafeteriaObject = null;
-    String jsonString = "";
+
     boolean isTomorrow = false;
 
 
@@ -28,7 +28,7 @@ public class EchoBot extends TelegramLongPollingBot {
 
             //######################################################
             //So könnte ein funktionierendes Beispiel mit Heute und Morgen aussehen (noch nicht getestet)
-            jsonString = getResponse(update.getMessage().getText());
+            String jsonString = getResponse(update.getMessage().getText());
             System.out.println(jsonString);
             System.out.println();
             String response = showJsonData(jsonString);
@@ -70,8 +70,17 @@ public class EchoBot extends TelegramLongPollingBot {
         } else if (message.contains ("woche")) {
             String response = apiBuilder.week();
             return response;
-        }else if (message.matches("/^(?:sun(?:day)?|mon(?:day)?|tue(?:sday)?|wed(?:nesday)?|thu(?:rsday)?|fri(?:day)?|sat(?:urday)?)$/i")) {
-            String response = apiBuilder.day(message);
+        }else if (message.matches("(.*)(Montag|Dienstag|Mittwoch|Donnerstag|Freitag|Samstag|Sonntag)(.*)")) {
+            String result = "";
+            System.out.println(message);
+            Pattern teil2 = Pattern.compile("(Montag|Dienstag|Mittwoch|Donnerstag|Freitag|Samstag|Sonntag)");
+            Matcher m = teil2.matcher(message);
+            while(m.find()){
+                System.out.print("HALLO" + m.group() + "KKKKKKK");
+                result = m.group();
+            }
+
+            String response = apiBuilder.day(result);
             System.out.println("Message: " + message);
             System.out.println("response: " + response);
             return response;
@@ -82,6 +91,8 @@ public class EchoBot extends TelegramLongPollingBot {
             Matcher mBis = bis.matcher(message);
             String param1 = mVon.group(1);
             String param2 = mBis.group(1);
+            System.out.println(param1);
+            System.out.println(param2);
             String response = apiBuilder.period(param1, param2);
             return response;
         }
@@ -125,7 +136,7 @@ public class EchoBot extends TelegramLongPollingBot {
         }
     }
 
-    public String showJsonData(String URL) {
+    public String showJsonData(String jsonString) {
         String result = "";
         String symbol = "";
         String name = "";
@@ -192,10 +203,10 @@ public class EchoBot extends TelegramLongPollingBot {
 
 
     public String getBotUsername() {
-        return "Cafeteria_FH_bot";
+        return "FH_KU_BOT";
     }
 
     public String getBotToken() {
-        return "561379899:AAE1ihEja2UH42vGxVmH4jk1xyYT_iu1BFE";
+        return "618922401:AAG8H5bbfzGG1vzUFDwWu57gWiekZrakVeQ";
     }
 }
