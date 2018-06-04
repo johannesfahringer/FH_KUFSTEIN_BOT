@@ -84,17 +84,19 @@ public class EchoBot extends TelegramLongPollingBot {
             System.out.println("Message: " + message);
             System.out.println("response: " + response);
             return response;
-        }else if (message.matches("(?<=von )(\\w+? )|(?<=bis )(\\w+? )")){
+        }else if (message.matches("(.) bis (.)")){
             Pattern von = Pattern.compile("(?<=von )(\\w+? )");
             Matcher mVon = von.matcher(message);
             Pattern bis = Pattern.compile("(?<=bis )(\\w+? )");
             Matcher mBis = bis.matcher(message);
-            String param1 = mVon.group(1);
-            String param2 = mBis.group(1);
-            System.out.println(param1);
-            System.out.println(param2);
-            String response = apiBuilder.period(param1, param2);
-            return response;
+            while(mBis.find()&&mVon.find()) {
+                String param1 = mVon.group(1);
+                String param2 = mBis.group(1);
+                System.out.println(param1);
+                System.out.println(param2);
+                String response = apiBuilder.period(param1, param2);
+                return response;
+            }
         }
         return "ungültige Eingabe";
     }
@@ -203,10 +205,10 @@ public class EchoBot extends TelegramLongPollingBot {
 
 
     public String getBotUsername() {
-        return "FH_KU_BOT";
+        return "Cafeteria_FH_bot";
     }
 
     public String getBotToken() {
-        return "618922401:AAG8H5bbfzGG1vzUFDwWu57gWiekZrakVeQ";
+        return "561379899:AAE1ihEja2UH42vGxVmH4jk1xyYT_iu1BFE";
     }
 }
